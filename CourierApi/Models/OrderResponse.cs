@@ -5,5 +5,7 @@ namespace CourierApi.Models
         public Parcel[] Parcels {get;set;}
 
         public string TotalPrice {get;set;}
+
+        public string SpeedyShippingPrice {get;set;}
     }
 }

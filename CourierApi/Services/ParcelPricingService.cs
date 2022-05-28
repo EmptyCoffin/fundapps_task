@@ -43,10 +43,12 @@ namespace CourierApi.Services
                 parcels.Add(_availableParcels.First(w => order.Dimensions.All(a => a < w.MaxDimension)));
             }            
 
+            var totalPrice = parcels.Sum(s => s.Price);
             return new OrderResponse
             {
                 Parcels = parcels.ToArray(),
-                TotalPrice = $"{parcels.Sum(s => s.Price).ToString("C", CultureInfo.CreateSpecificCulture("en-US"))}"
+                TotalPrice = totalPrice.ToString("C", CultureInfo.CreateSpecificCulture("en-US")),
+                SpeedyShippingPrice = (totalPrice * 2).ToString("C", CultureInfo.CreateSpecificCulture("en-US"))
             };
         }
     }

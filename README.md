@@ -6,3 +6,6 @@ Api Integration tests and Unit tests were used to verify the functionality of th
 
 # Step 1
 Added service and handling for parcel pricing with just dimenions, with unit tests
+
+# Step 2
+Added property to display speedy shipping price, with unit tests

@@ -59,5 +59,34 @@ namespace CourierApiUnitTests.Services
             Assert.AreEqual("Large", response.Parcels[2].SizeType);
             Assert.AreEqual("XL", response.Parcels[3].SizeType);
         }
+
+        [TestMethod]
+        public void GetParcelPricing_GivenInput_ShouldReturnTotalAmountAndSpeedyShippingAmount()
+        {
+            // arrange
+            var input = new ParcelOrder[]
+            {
+                new ParcelOrder
+                {
+                    Dimensions = new int [] {36, 36, 36}
+                },
+                new ParcelOrder
+                {
+                    Dimensions = new int [] {36, 36, 36}
+                },
+                new ParcelOrder
+                {
+                    Dimensions = new int [] {106, 106, 106}
+                }
+            };
+
+            // act
+            var response = _parcelPricingService.GetParcelPricing(input);
+
+            // assert
+            Assert.IsNotNull(response);
+            Assert.AreEqual("$41.00", response.TotalPrice);
+            Assert.AreEqual("$82.00", response.SpeedyShippingPrice);
+        }
     }
 }
