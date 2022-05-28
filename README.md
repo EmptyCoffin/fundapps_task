@@ -9,3 +9,6 @@ Added service and handling for parcel pricing with just dimenions, with unit tes
 
 # Step 2
 Added property to display speedy shipping price, with unit tests
+
+# Step 3
+Restructured models to handle weighting plus additional costs and added to service, with unit tests

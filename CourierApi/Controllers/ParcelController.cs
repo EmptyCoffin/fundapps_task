@@ -16,7 +16,7 @@ namespace CourierApi.Controllers
         }
 
         [HttpPost]
-        public OrderResponse GetParcelPricing([FromBody] ParcelOrder[] orders)
+        public OrderResponse GetParcelPricing([FromBody] ParcelInput[] orders)
         {
             if(orders == null || orders.Length == 0)
             {

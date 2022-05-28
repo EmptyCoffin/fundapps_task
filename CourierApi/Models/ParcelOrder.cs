@@ -2,6 +2,8 @@ namespace CourierApi.Models
 {
     public class ParcelOrder
     {
-        public int[] Dimensions {get;set;}
+        public string SizeType {get;set;}
+
+        public decimal OverallCost {get;set;}
     }
 }

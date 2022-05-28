@@ -27,23 +27,27 @@ namespace CourierApiUnitTests.Services
         public void GetParcelPricing_GivenDifferentDimensions_ShouldCorrectlyIdentifyParcelsAndReturnTotalCount()
         {
             // arrange
-            var input = new ParcelOrder[]
+            var input = new ParcelInput[]
             {
-                new ParcelOrder
+                new ParcelInput
                 {
-                    Dimensions = new int [] {6, 6, 6}
+                    Dimensions = new int [] {6, 6, 6},
+                    Weight = "1Kg"
                 },
-                new ParcelOrder
+                new ParcelInput
                 {
-                    Dimensions = new int [] {36, 36, 36}
+                    Dimensions = new int [] {36, 36, 36},
+                    Weight = "1Kg"
                 },
-                new ParcelOrder
+                new ParcelInput
                 {
-                    Dimensions = new int [] {56, 56, 56}
+                    Dimensions = new int [] {56, 56, 56},
+                    Weight = "1Kg"
                 },
-                new ParcelOrder
+                new ParcelInput
                 {
-                    Dimensions = new int [] {106, 106, 106}
+                    Dimensions = new int [] {106, 106, 106},
+                    Weight = "1Kg"
                 }
             };
 
@@ -64,19 +68,22 @@ namespace CourierApiUnitTests.Services
         public void GetParcelPricing_GivenInput_ShouldReturnTotalAmountAndSpeedyShippingAmount()
         {
             // arrange
-            var input = new ParcelOrder[]
+            var input = new ParcelInput[]
             {
-                new ParcelOrder
+                new ParcelInput
                 {
-                    Dimensions = new int [] {36, 36, 36}
+                    Dimensions = new int [] {36, 36, 36},
+                    Weight = "1Kg"
                 },
-                new ParcelOrder
+                new ParcelInput
                 {
-                    Dimensions = new int [] {36, 36, 36}
+                    Dimensions = new int [] {36, 36, 36},
+                    Weight = "1Kg"
                 },
-                new ParcelOrder
+                new ParcelInput
                 {
-                    Dimensions = new int [] {106, 106, 106}
+                    Dimensions = new int [] {106, 106, 106},
+                    Weight = "1Kg"
                 }
             };
 
@@ -87,6 +94,43 @@ namespace CourierApiUnitTests.Services
             Assert.IsNotNull(response);
             Assert.AreEqual("$41.00", response.TotalPrice);
             Assert.AreEqual("$82.00", response.SpeedyShippingPrice);
+        }
+
+        [TestMethod]
+        public void GetParcelPricing_GivenInputWithExceedingWeights_ShouldReturnHigherTotalAmounts()
+        {
+            // arrange
+            var input = new ParcelInput[]
+            {
+                new ParcelInput
+                {
+                    Dimensions = new int [] {36, 36, 36},
+                    Weight = "5Kg"
+                },
+                new ParcelInput
+                {
+                    Dimensions = new int [] {36, 36, 36},
+                    Weight = "1Kg"
+                },
+                new ParcelInput
+                {
+                    Dimensions = new int [] {36, 36, 36},
+                    Weight = "9Kg"
+                },
+                new ParcelInput
+                {
+                    Dimensions = new int [] {106, 106, 106},
+                    Weight = "15Kg"
+                }
+            };
+
+            // act
+            var response = _parcelPricingService.GetParcelPricing(input);
+
+            // assert
+            Assert.IsNotNull(response);
+            Assert.AreEqual("$75.00", response.TotalPrice);
+            Assert.AreEqual("$150.00", response.SpeedyShippingPrice);
         }
     }
 }

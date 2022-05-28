@@ -4,6 +4,6 @@ namespace CourierApi.Services
 {
     public interface IParcelPricingService
     {
-         OrderResponse GetParcelPricing(ParcelOrder[] orders);
+         OrderResponse GetParcelPricing(ParcelInput[] orders);
     }
 }

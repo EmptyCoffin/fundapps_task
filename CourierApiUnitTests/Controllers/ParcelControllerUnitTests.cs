@@ -18,7 +18,7 @@ namespace CourierApiUnitTests
         public void Initialise()
         {
             _parcelPricingServiceMock = new Mock<IParcelPricingService>();
-            _parcelPricingServiceMock.Setup(s => s.GetParcelPricing(It.IsAny<ParcelOrder[]>()))
+            _parcelPricingServiceMock.Setup(s => s.GetParcelPricing(It.IsAny<ParcelInput[]>()))
                 .Returns(() => _orderResponse).Verifiable();
 
             _parcelController = new ParcelController(_parcelPricingServiceMock.Object);
@@ -38,7 +38,7 @@ namespace CourierApiUnitTests
         public void GetParcelPricing_GivenInvalidInput_ShouldReturnEmptyResponse(int? arrayLength)
         {
             // arrange
-            var input = arrayLength.HasValue ? new ParcelOrder[arrayLength.Value] : null;
+            var input = arrayLength.HasValue ? new ParcelInput[arrayLength.Value] : null;
 
             // act
             var response = _parcelController.GetParcelPricing(input);
@@ -54,17 +54,16 @@ namespace CourierApiUnitTests
         {
             // arrange
             var inputDimensions = new [] {
-                new ParcelOrder { 
+                new ParcelInput { 
                     Dimensions = new [] { 1, 1, 1 }
                  }
             };
             _orderResponse = new OrderResponse
             {
                 Parcels = new [] {
-                    new Parcel {
+                    new ParcelOrder {
                         SizeType = "Small",
-                        Price = 2.0M,
-                        MaxDimension = 2
+                        OverallCost = 2.0M
                     }
                 },
                 TotalPrice = "$2.00"
@@ -74,7 +73,7 @@ namespace CourierApiUnitTests
             var response = _parcelController.GetParcelPricing(inputDimensions);
 
             // assert
-            _parcelPricingServiceMock.Verify(v => v.GetParcelPricing(It.Is<ParcelOrder[]>(p => p.Length == inputDimensions.Length)), Times.Once);
+            _parcelPricingServiceMock.Verify(v => v.GetParcelPricing(It.Is<ParcelInput[]>(p => p.Length == inputDimensions.Length)), Times.Once);
             Assert.IsNotNull(response);
             Assert.AreEqual(_orderResponse.TotalPrice, response.TotalPrice);
             Assert.AreEqual(_orderResponse.Parcels.Length, response.Parcels.Length);
