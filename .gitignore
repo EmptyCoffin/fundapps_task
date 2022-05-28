@@ -156,3 +156,5 @@ CourierApiUnitTests/obj/Debug/net5.0/CourierApiUnitTests.GeneratedMSBuildEditorC
 CourierApiUnitTests/obj/Debug/net5.0/CourierApiUnitTests.genruntimeconfig.cache
 CourierApiUnitTests/obj/Debug/net5.0/CourierApiUnitTests.pdb
 CourierApiUnitTests/obj/Debug/net5.0/ref/CourierApiUnitTests.dll
+CourierApiUnitTests/bin/Debug/net5.0/Castle.Core.dll
+CourierApiUnitTests/bin/Debug/net5.0/Moq.dll

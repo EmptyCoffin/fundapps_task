@@ -1,4 +1,5 @@
-﻿using System;
+﻿using CourierApi.Models;
+using CourierApi.Services;
 using Microsoft.AspNetCore.Mvc;
 
 namespace CourierApi.Controllers
@@ -7,10 +8,22 @@ namespace CourierApi.Controllers
     [Route("[controller]")]
     public class ParcelController : ControllerBase
     {
-        [HttpGet]
-        public void GetParcelPricing()
+        private IParcelPricingService _service;
+
+        public ParcelController(IParcelPricingService service)
         {
-            throw new NotImplementedException();
+            _service = service;
+        }
+
+        [HttpPost]
+        public OrderResponse GetParcelPricing([FromBody] ParcelOrder[] orders)
+        {
+            if(orders == null || orders.Length == 0)
+            {
+                return new OrderResponse();
+            }
+
+            return _service.GetParcelPricing(orders);
         }
     }
 }

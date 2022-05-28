@@ -3,3 +3,6 @@ The application was written in C# in Visual Studio Code (v1.66.0) with the follo
 Each project is using NET Core 5.0	
 
 Api Integration tests and Unit tests were used to verify the functionality of the application
+
+# Step 1
+Added service and handling for parcel pricing with just dimenions, with unit tests
