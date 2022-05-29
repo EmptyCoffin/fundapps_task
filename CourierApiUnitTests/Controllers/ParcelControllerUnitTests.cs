@@ -62,7 +62,7 @@ namespace CourierApiUnitTests
             {
                 Parcels = new [] {
                     new ParcelOrder {
-                        SizeType = "Small",
+                        SizeType = ParcelSizeEnum.Small,
                         OverallCost = 2.0M
                     }
                 },

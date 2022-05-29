@@ -2,7 +2,7 @@ namespace CourierApi.Models
 {
     public class ParcelTemplate
     {
-        public string SizeType {get;set;}
+        public ParcelSizeEnum SizeType {get;set;}
 
         public int MaxDimension {get;set;}
 

@@ -1,4 +1,5 @@
 using CourierApi.Models;
+using CourierApi.Services;
 using System;
 using System.Collections.Generic;
 using System.Globalization;
@@ -8,10 +9,11 @@ namespace CourierApi.Services
 {
     public class ParcelPricingService : IParcelPricingService
     {
+        private IDiscountService _discountService;
         private ParcelTemplate[] _availableParcels = new [] {
             new ParcelTemplate
             {
-                SizeType = "Small",
+                SizeType = ParcelSizeEnum.Small,
                 Price = 3.0M,
                 MaxDimension = 10,
                 WeightLimit = 1,
@@ -19,7 +21,7 @@ namespace CourierApi.Services
             },
             new ParcelTemplate
             {
-                SizeType = "Medium",
+                SizeType = ParcelSizeEnum.Medium,
                 Price = 8.0M,
                 MaxDimension = 50,
                 WeightLimit = 3,
@@ -27,7 +29,7 @@ namespace CourierApi.Services
             },
             new ParcelTemplate
             {
-                SizeType = "Large",
+                SizeType = ParcelSizeEnum.Large,
                 Price = 15.0M,
                 MaxDimension = 100,
                 WeightLimit = 6,
@@ -35,13 +37,18 @@ namespace CourierApi.Services
             },
             new ParcelTemplate
             {
-                SizeType = "XL",
+                SizeType = ParcelSizeEnum.XL,
                 Price = 25.0M,
                 MaxDimension = 999,
                 WeightLimit = 10,
                 CostPerWeightExceeded = 2.0M
             }
         };
+
+        public ParcelPricingService(IDiscountService discountService)
+        {
+            _discountService = discountService;
+        }
 
         public OrderResponse GetParcelPricing(ParcelInput[] orders)
         {
@@ -52,10 +59,13 @@ namespace CourierApi.Services
                 parcels.Add(GetParcelOrder(order));
             }            
 
-            var totalPrice = parcels.Sum(s => s.OverallCost);
+            var discounts = _discountService.CheckForDiscounts(parcels);
+
+            var totalPrice = parcels.Sum(s => s.OverallCost) - (discounts?.Sum(s => s.Savings) ?? 0);
             return new OrderResponse
             {
                 Parcels = parcels.ToArray(),
+                DiscountsApplied = discounts?.ToArray(),
                 TotalPrice = totalPrice.ToString("C", CultureInfo.CreateSpecificCulture("en-US")),
                 SpeedyShippingPrice = (totalPrice * 2).ToString("C", CultureInfo.CreateSpecificCulture("en-US"))
             };
