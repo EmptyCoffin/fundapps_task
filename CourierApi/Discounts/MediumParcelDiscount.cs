@@ -5,27 +5,27 @@ using System.Linq;
 
 namespace CourierApi.Discounts
 {
-    public class SmallParcelDiscount : IDiscount
+    public class MediumParcelDiscount : IDiscount
     {
-        private readonly int _numberForValidDiscount = 4;
+        private readonly int _numberForValidDiscount = 3;
         public string DiscountOffer {get;}
-
-        public SmallParcelDiscount()
+        
+        public MediumParcelDiscount()
         {
-            DiscountOffer = "Small Parcel Mania!";
+            DiscountOffer = "Medium Parcel Mania!";   
         }
 
         public IEnumerable<Discount> CheckDiscount(IEnumerable<ParcelOrder> orders)
         {
-            var orderedSmall = orders.Where(w => w.SizeType == ParcelSizeEnum.Small).OrderBy(o => o.OverallCost);
+            var orderMedium = orders.Where(w => w.SizeType == ParcelSizeEnum.Medium).OrderBy(o => o.OverallCost);
             
-            if (orderedSmall.Count() < _numberForValidDiscount)
+            if (orderMedium.Count() < _numberForValidDiscount)
             {
                 return null;
             }
 
-            var numberOfDiscounts = Math.Floor((double)(orderedSmall.Count() / _numberForValidDiscount));
-            return orderedSmall.ToArray()
+            var numberOfDiscounts = Math.Floor((double)(orderMedium.Count() / _numberForValidDiscount));
+            return orderMedium.ToArray()
                 .Take((int)numberOfDiscounts).Select(s => 
                     new Discount
                     { 

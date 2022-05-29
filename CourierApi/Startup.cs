@@ -22,6 +22,8 @@ namespace CourierApi
         public void ConfigureServices(IServiceCollection services)
         {
             services.AddScoped<IDiscount, SmallParcelDiscount>();
+            services.AddScoped<IDiscount, MediumParcelDiscount>();
+            services.AddScoped<IDiscount, MixedParcelDiscount>();
             services.AddScoped<IDiscountService, DiscountsService>();
             services.AddScoped<IParcelPricingService, ParcelPricingService>();
 

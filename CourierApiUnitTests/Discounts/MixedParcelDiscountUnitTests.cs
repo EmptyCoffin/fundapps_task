@@ -7,35 +7,35 @@ using System.Linq;
 namespace CourierApiUnitTests.Discounts
 {
     [TestClass]
-    public class SmallParcelDiscountUnitTests
+    public class MixedParcelDiscountUnitTests
     {
-        private SmallParcelDiscount _smallParcelDiscount;
+        private MixedParcelDiscount _mixedParcelDiscount;
 
         [TestInitialize]
         public void Initialise()
         {
-            _smallParcelDiscount = new SmallParcelDiscount();
+            _mixedParcelDiscount = new MixedParcelDiscount();
         }
 
         [TestCleanup]
         public void CleanUp()
         {
-            _smallParcelDiscount = null;
+            _mixedParcelDiscount = null;
         }
         
         [TestMethod]
         public void DiscountOffer_GivenClassInitialised_ShouldReturnCorrectValue()
         {
             // act
-            var result = _smallParcelDiscount.DiscountOffer;
+            var result = _mixedParcelDiscount.DiscountOffer;
 
             // assert
             Assert.IsNotNull(result);
-            Assert.AreEqual("Small Parcel Mania!", result);
+            Assert.AreEqual("Mixed Parcel Mania!", result);
         }
 
         [TestMethod]
-        public void CheckDiscount_GivenNotEnoughSmallParcels_ShouldReturnNull()
+        public void CheckDiscount_GivenNotEnoughMixedParcels_ShouldReturnNull()
         {
             // arrange
             var orders = new ParcelOrder[] {
@@ -46,14 +46,14 @@ namespace CourierApiUnitTests.Discounts
             };
 
             // act
-            var result = _smallParcelDiscount.CheckDiscount(orders);
+            var result = _mixedParcelDiscount.CheckDiscount(orders);
 
             // assert
             Assert.IsNull(result);
         }
         
         [TestMethod]
-        public void CheckDiscount_GivenCorrectSmallParcels_ShouldReturnWithCheapestSetAsDiscount()
+        public void CheckDiscount_GivenCorrectMixedParcels_ShouldReturnWithCheapestSetAsDiscount()
         {
             // arrange
             var orders = new ParcelOrder[] {
@@ -64,7 +64,7 @@ namespace CourierApiUnitTests.Discounts
                 },
                 new ParcelOrder
                 {
-                    SizeType = ParcelSizeEnum.Small,
+                    SizeType = ParcelSizeEnum.XL,
                     OverallCost = 8.0M
                 },
                 new ParcelOrder
@@ -79,29 +79,39 @@ namespace CourierApiUnitTests.Discounts
                 },
                 new ParcelOrder
                 {
-                    SizeType = ParcelSizeEnum.Small,
+                    SizeType = ParcelSizeEnum.Medium,
                     OverallCost = 12.0M
                 }
             };
 
             // act
-            var result = _smallParcelDiscount.CheckDiscount(orders).ToArray();
+            var result = _mixedParcelDiscount.CheckDiscount(orders).ToArray();
 
             // assert
             Assert.IsNotNull(result);
             Assert.AreEqual(1, result.Count());
-            Assert.AreEqual("Small Parcel Mania!", result[0].DiscountOffer);
+            Assert.AreEqual("Mixed Parcel Mania!", result[0].DiscountOffer);
             Assert.AreEqual(8.0M, result[0].Savings);
         }
 
         [TestMethod]
-        public void CheckDiscount_GivenMultipleCorrectSmallParcels_ShouldReturnWithCheapestSetAsDiscount()
+        public void CheckDiscount_GivenMultipleCorrectMixedParcels_ShouldReturnWithCheapestSetAsDiscount()
         {
             // arrange
             var orders = new ParcelOrder[] {
                 new ParcelOrder
                 {
-                    SizeType = ParcelSizeEnum.Small,
+                    SizeType = ParcelSizeEnum.Medium,
+                    OverallCost = 12.0M
+                },
+                new ParcelOrder
+                {
+                    SizeType = ParcelSizeEnum.Medium,
+                    OverallCost = 12.0M
+                },
+                new ParcelOrder
+                {
+                    SizeType = ParcelSizeEnum.Medium,
                     OverallCost = 12.0M
                 },
                 new ParcelOrder
@@ -111,7 +121,7 @@ namespace CourierApiUnitTests.Discounts
                 },
                 new ParcelOrder
                 {
-                    SizeType = ParcelSizeEnum.Small,
+                    SizeType = ParcelSizeEnum.Medium,
                     OverallCost = 30.0M
                 },
                 new ParcelOrder
@@ -122,7 +132,7 @@ namespace CourierApiUnitTests.Discounts
                 new ParcelOrder
                 {
                     SizeType = ParcelSizeEnum.Large,
-                    OverallCost = 12.0M
+                    OverallCost = 4.0M
                 },
                 new ParcelOrder
                 {
@@ -131,7 +141,7 @@ namespace CourierApiUnitTests.Discounts
                 },
                 new ParcelOrder
                 {
-                    SizeType = ParcelSizeEnum.Small,
+                    SizeType = ParcelSizeEnum.Medium,
                     OverallCost = 6.0M
                 },
                 new ParcelOrder
@@ -147,15 +157,15 @@ namespace CourierApiUnitTests.Discounts
             };
 
             // act
-            var result = _smallParcelDiscount.CheckDiscount(orders).ToArray();
+            var result = _mixedParcelDiscount.CheckDiscount(orders).ToArray();
 
             // assert
             Assert.IsNotNull(result);
             Assert.AreEqual(2, result.Count());
-            Assert.AreEqual("Small Parcel Mania!", result[0].DiscountOffer);
-            Assert.AreEqual(6.0M, result[0].Savings);
-            Assert.AreEqual("Small Parcel Mania!", result[1].DiscountOffer);
-            Assert.AreEqual(8.0M, result[1].Savings);
-        }
+            Assert.AreEqual("Mixed Parcel Mania!", result[0].DiscountOffer);
+            Assert.AreEqual(4.0M, result[0].Savings);
+            Assert.AreEqual("Mixed Parcel Mania!", result[1].DiscountOffer);
+            Assert.AreEqual(6.0M, result[1].Savings);
+        }      
     }
 }
