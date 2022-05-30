@@ -67,6 +67,7 @@ namespace CourierApi.Services
 
             var discounts = _discountService.CheckForDiscounts(parcels);
 
+            // get total price from sum of parcel order and discounted amount
             var totalPrice = parcels.Sum(s => s.OverallCost) - (discounts?.Sum(s => s.Savings) ?? 0);
             return new OrderResponse
             {
@@ -79,6 +80,7 @@ namespace CourierApi.Services
 
         private ParcelOrder GetParcelOrder(ParcelInput order)
         {
+            // set standard parcels based on dimensions
             var selectedParcel = _availableParcels.First(w => order.Dimensions.All(a => a < w.MaxDimension));
             var returningParcel = new ParcelOrder {
                 SizeType = selectedParcel.SizeType,
@@ -95,6 +97,7 @@ namespace CourierApi.Services
             var parcelWeight = Convert.ToInt32(orderWeight.Substring(0, orderWeight.Length - 2));
             if (parcelWeight > selectedParcel.WeightLimit)
             {
+                // calculate both standard and heavy parcel prices to compare cheapest price
                 var overWeightFees = (parcelWeight - selectedParcel.WeightLimit) * selectedParcel.CostPerWeightExceeded;
                 var heavyWeightFee = GetHeavyParcelPrice(parcelWeight);
                 if (overWeightFees > heavyWeightFee) 

@@ -18,6 +18,7 @@ namespace CourierApi.Discounts
 
         public IEnumerable<Discount> CheckDiscount(IList<ParcelOrder> orders)
         {
+            // order by so easier to remove cheapest option
             var orderMedium = orders.Where(w => w.SizeType == ParcelSizeEnum.Medium && !w.HasBeenDiscounted)
                                 .OrderBy(o => o.OverallCost);
             
@@ -29,6 +30,7 @@ namespace CourierApi.Discounts
             var numberOfDiscounts = Math.Floor((double)(orderMedium.Count() / _numberForValidDiscount));
             var selectedItems = orderMedium.ToArray().Take((int)numberOfDiscounts);
             
+            // mark discount items as being discount to not be included in future
             foreach(var selectedItem in selectedItems)
             {
                 var index = orders.FindIndex(f => f.SizeType == selectedItem.SizeType 
