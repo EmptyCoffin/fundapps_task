@@ -2,7 +2,7 @@
 The application was written in C# in Visual Studio Code (v1.66.0) with the following extensions; .NET Core Test Explorer (v0.7.7), C# (v1.24.3), C# Extensions (v1.3.1)
 Each project is using NET Core 5.0	
 
-Api Integration tests and Unit tests were used to verify the functionality of the application
+Api interaction and Unit tests were used to verify the functionality of the application
 
 # Step 1
 Added service and handling for parcel pricing with just dimenions, with unit tests
@@ -20,3 +20,8 @@ Rearranged discount order and applied new property to track which parcels are di
 
 # Step 4
 Added heavy parcel type and handling for choosing between marking as heavy or standard parcel.
+
+# Future work
+I would like to look to integrate a database to store possible parcel types, which would allow for more refactoring in current services.
+There is currently quite a lot of duplication for the individual discounts, so I would like to maybe make use of database options and maybe a parent class
+Would be great to have a basic web ui to display to the users potential different options and they can see what happens when changing dimensions/weights
