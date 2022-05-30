@@ -10,6 +10,12 @@ namespace CourierApi.Services
     public class ParcelPricingService : IParcelPricingService
     {
         private IDiscountService _discountService;
+        private ParcelTemplate _heavyParcel = new ParcelTemplate
+        {
+            Price = 50.0M,
+            WeightLimit = 50,
+            CostPerWeightExceeded = 1.0M
+        };
         private ParcelTemplate[] _availableParcels = new [] {
             new ParcelTemplate
             {
@@ -79,13 +85,34 @@ namespace CourierApi.Services
                 OverallCost = selectedParcel.Price
             };
 
-            var parcelWeight = Convert.ToInt32(order.Weight.Substring(0, order.Weight.Length - 2));
-            if (parcelWeight > selectedParcel.WeightLimit)
-            {
-                returningParcel.OverallCost += (parcelWeight - selectedParcel.WeightLimit) * selectedParcel.CostPerWeightExceeded;
-            }
+            AccommodateParcelWeight(order.Weight, selectedParcel, returningParcel);
 
             return returningParcel;
+        }
+
+        private void AccommodateParcelWeight(string orderWeight, ParcelTemplate selectedParcel, ParcelOrder parcel)
+        {
+            var parcelWeight = Convert.ToInt32(orderWeight.Substring(0, orderWeight.Length - 2));
+            if (parcelWeight > selectedParcel.WeightLimit)
+            {
+                var overWeightFees = (parcelWeight - selectedParcel.WeightLimit) * selectedParcel.CostPerWeightExceeded;
+                var heavyWeightFee = GetHeavyParcelPrice(parcelWeight);
+                if (overWeightFees > heavyWeightFee) 
+                {
+                    parcel.SizeType = ParcelSizeEnum.Heavy;
+                    parcel.OverallCost = heavyWeightFee;
+                }
+                else
+                {
+                    parcel.OverallCost += overWeightFees;
+                }
+            }
+        }
+
+        private decimal GetHeavyParcelPrice(int parcelWeight)
+        {            
+            return _heavyParcel.Price + (parcelWeight > _heavyParcel.WeightLimit ? 
+                        (parcelWeight - _heavyParcel.WeightLimit) * _heavyParcel.CostPerWeightExceeded : 0);
         }
     }
 }

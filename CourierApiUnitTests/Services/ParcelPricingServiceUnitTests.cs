@@ -200,5 +200,49 @@ namespace CourierApiUnitTests.Services
             Assert.AreEqual("$33.00", response.TotalPrice);
             Assert.AreEqual("$66.00", response.SpeedyShippingPrice);
         }
+
+        [TestMethod]
+        public void GetParcelPricing_GivenParcelWeightCostingIsVeryLarge_ShouldClassAsHeavyParcelSoCheaper()
+        {
+            // arrange
+            var input = new ParcelInput[]
+            {
+                new ParcelInput
+                {
+                    Dimensions = new int [] {36, 36, 36},
+                    Weight = "2Kg"
+                },
+                new ParcelInput
+                {
+                    Dimensions = new int [] {36, 36, 36},
+                    Weight = "6Kg"
+                },
+                new ParcelInput
+                {
+                    Dimensions = new int [] {36, 36, 36},
+                    Weight = "30Kg"
+                },
+                new ParcelInput
+                {
+                    Dimensions = new int [] {36, 36, 36},
+                    Weight = "90Kg"
+                }
+            };
+            _returningDiscounts = new Discount[] {};
+
+            // act
+            var response = _parcelPricingService.GetParcelPricing(input);
+
+            // assert
+            Assert.IsNotNull(response);
+            Assert.AreEqual(ParcelSizeEnum.Medium, response.Parcels[0].SizeType);
+            Assert.AreEqual(8.0M, response.Parcels[0].OverallCost);
+            Assert.AreEqual(ParcelSizeEnum.Medium, response.Parcels[1].SizeType);
+            Assert.AreEqual(14.0M, response.Parcels[1].OverallCost);
+            Assert.AreEqual(ParcelSizeEnum.Heavy, response.Parcels[2].SizeType);
+            Assert.AreEqual(50.0M, response.Parcels[2].OverallCost);
+            Assert.AreEqual(ParcelSizeEnum.Heavy, response.Parcels[3].SizeType);
+            Assert.AreEqual(90.0M, response.Parcels[3].OverallCost);
+        }
     }
 }

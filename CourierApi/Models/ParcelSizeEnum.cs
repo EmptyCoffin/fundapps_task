@@ -5,6 +5,7 @@ namespace CourierApi.Models
         Small,
         Medium,
         Large,
-        XL
+        XL,
+        Heavy
     }
 }
