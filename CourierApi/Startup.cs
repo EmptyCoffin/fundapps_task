@@ -21,9 +21,9 @@ namespace CourierApi
         // This method gets called by the runtime. Use this method to add services to the container.
         public void ConfigureServices(IServiceCollection services)
         {
-            services.AddScoped<IDiscount, SmallParcelDiscount>();
-            services.AddScoped<IDiscount, MediumParcelDiscount>();
             services.AddScoped<IDiscount, MixedParcelDiscount>();
+            services.AddScoped<IDiscount, MediumParcelDiscount>();
+            services.AddScoped<IDiscount, SmallParcelDiscount>();
             services.AddScoped<IDiscountService, DiscountsService>();
             services.AddScoped<IParcelPricingService, ParcelPricingService>();
 

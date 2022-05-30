@@ -38,10 +38,41 @@ namespace CourierApiUnitTests.Discounts
         public void CheckDiscount_GivenNotEnoughSmallParcels_ShouldReturnNull()
         {
             // arrange
-            var orders = new ParcelOrder[] {
+            var orders = new List<ParcelOrder> {
                 new ParcelOrder
                 {
                     SizeType = ParcelSizeEnum.Medium
+                }
+            };
+
+            // act
+            var result = _smallParcelDiscount.CheckDiscount(orders);
+
+            // assert
+            Assert.IsNull(result);
+        }
+
+        [TestMethod]
+        public void CheckDiscount_GivenParcelsHaveBeenDiscounted_ShouldNotApplyDiscount()
+        {
+            // arrange
+            var orders = new List<ParcelOrder> {
+                new ParcelOrder
+                {
+                    SizeType = ParcelSizeEnum.Small
+                },
+                new ParcelOrder
+                {
+                    SizeType = ParcelSizeEnum.Small
+                },
+                new ParcelOrder
+                {
+                    SizeType = ParcelSizeEnum.Small
+                },
+                new ParcelOrder
+                {
+                    SizeType = ParcelSizeEnum.Small,
+                    HasBeenDiscounted = true
                 }
             };
 
@@ -56,7 +87,7 @@ namespace CourierApiUnitTests.Discounts
         public void CheckDiscount_GivenCorrectSmallParcels_ShouldReturnWithCheapestSetAsDiscount()
         {
             // arrange
-            var orders = new ParcelOrder[] {
+            var orders = new List<ParcelOrder> {
                 new ParcelOrder
                 {
                     SizeType = ParcelSizeEnum.Small,
@@ -98,7 +129,7 @@ namespace CourierApiUnitTests.Discounts
         public void CheckDiscount_GivenMultipleCorrectSmallParcels_ShouldReturnWithCheapestSetAsDiscount()
         {
             // arrange
-            var orders = new ParcelOrder[] {
+            var orders = new List<ParcelOrder> {
                 new ParcelOrder
                 {
                     SizeType = ParcelSizeEnum.Small,

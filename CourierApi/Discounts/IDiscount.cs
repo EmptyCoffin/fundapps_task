@@ -7,6 +7,6 @@ namespace CourierApi.Discounts
     {
         string DiscountOffer {get;}
 
-        IEnumerable<Discount> CheckDiscount(IEnumerable<ParcelOrder> orders);
+        IEnumerable<Discount> CheckDiscount(IList<ParcelOrder> orders);
     }
 }

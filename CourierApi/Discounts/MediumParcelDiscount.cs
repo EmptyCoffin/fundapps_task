@@ -1,3 +1,4 @@
+using CourierApi.Extensions;
 using CourierApi.Models;
 using System;
 using System.Collections.Generic;
@@ -15,9 +16,10 @@ namespace CourierApi.Discounts
             DiscountOffer = "Medium Parcel Mania!";   
         }
 
-        public IEnumerable<Discount> CheckDiscount(IEnumerable<ParcelOrder> orders)
+        public IEnumerable<Discount> CheckDiscount(IList<ParcelOrder> orders)
         {
-            var orderMedium = orders.Where(w => w.SizeType == ParcelSizeEnum.Medium).OrderBy(o => o.OverallCost);
+            var orderMedium = orders.Where(w => w.SizeType == ParcelSizeEnum.Medium && !w.HasBeenDiscounted)
+                                .OrderBy(o => o.OverallCost);
             
             if (orderMedium.Count() < _numberForValidDiscount)
             {
@@ -25,8 +27,16 @@ namespace CourierApi.Discounts
             }
 
             var numberOfDiscounts = Math.Floor((double)(orderMedium.Count() / _numberForValidDiscount));
-            return orderMedium.ToArray()
-                .Take((int)numberOfDiscounts).Select(s => 
+            var selectedItems = orderMedium.ToArray().Take((int)numberOfDiscounts);
+            
+            foreach(var selectedItem in selectedItems)
+            {
+                var index = orders.FindIndex(f => f.SizeType == selectedItem.SizeType 
+                                && f.OverallCost == selectedItem.OverallCost && !f.HasBeenDiscounted);
+                orders[index].HasBeenDiscounted = true;
+            }
+
+            return selectedItems.Select(s => 
                     new Discount
                     { 
                         Savings = s.OverallCost, 

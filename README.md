@@ -16,3 +16,4 @@ Restructured models to handle weighting plus additional costs and added to servi
 # Step 5
 Restructured models to handle discounts as well as new services. Added discount for small parcels
 Added discount for medium/mixed parcels
+Rearranged discount order and applied new property to track which parcels are discounted to stop duplicates

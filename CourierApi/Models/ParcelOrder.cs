@@ -4,6 +4,8 @@ namespace CourierApi.Models
     {
         public ParcelSizeEnum SizeType {get;set;}
 
+        public bool HasBeenDiscounted {get;set;}
+
         public decimal OverallCost {get;set;}
     }
 }

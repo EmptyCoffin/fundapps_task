@@ -21,9 +21,9 @@ namespace CourierApiUnitTests.Services
         public void Initialise()
         {
             _discount1 = new Mock<IDiscount>();
-            _discount1.Setup(s => s.CheckDiscount(It.IsAny<IEnumerable<ParcelOrder>>())).Returns(() => _returningDiscounts1).Verifiable();
+            _discount1.Setup(s => s.CheckDiscount(It.IsAny<IList<ParcelOrder>>())).Returns(() => _returningDiscounts1).Verifiable();
             _discount2 = new Mock<IDiscount>();
-            _discount2.Setup(s => s.CheckDiscount(It.IsAny<IEnumerable<ParcelOrder>>())).Returns(() => _returningDiscounts2).Verifiable();
+            _discount2.Setup(s => s.CheckDiscount(It.IsAny<IList<ParcelOrder>>())).Returns(() => _returningDiscounts2).Verifiable();
 
             _service = new DiscountsService(new [] { _discount1.Object, _discount2.Object });
         }
@@ -48,8 +48,8 @@ namespace CourierApiUnitTests.Services
             var result = _service.CheckForDiscounts(input);
 
             // assert
-            _discount1.Verify(v => v.CheckDiscount(It.Is<IEnumerable<ParcelOrder>>(o => o.Count() == input.Length)), Times.Once);
-            _discount2.Verify(v => v.CheckDiscount(It.Is<IEnumerable<ParcelOrder>>(o => o.Count() == input.Length)), Times.Once);
+            _discount1.Verify(v => v.CheckDiscount(It.Is<IList<ParcelOrder>>(o => o.Count() == input.Length)), Times.Once);
+            _discount2.Verify(v => v.CheckDiscount(It.Is<IList<ParcelOrder>>(o => o.Count() == input.Length)), Times.Once);
             Assert.IsNotNull(result);
             Assert.AreEqual(0, result.Count());
         }
@@ -73,8 +73,8 @@ namespace CourierApiUnitTests.Services
             var result = _service.CheckForDiscounts(input).ToArray();
 
             // assert
-            _discount1.Verify(v => v.CheckDiscount(It.Is<IEnumerable<ParcelOrder>>(o => o.Count() == input.Length)), Times.Once);
-            _discount2.Verify(v => v.CheckDiscount(It.Is<IEnumerable<ParcelOrder>>(o => o.Count() == input.Length)), Times.Once);
+            _discount1.Verify(v => v.CheckDiscount(It.Is<IList<ParcelOrder>>(o => o.Count() == input.Length)), Times.Once);
+            _discount2.Verify(v => v.CheckDiscount(It.Is<IList<ParcelOrder>>(o => o.Count() == input.Length)), Times.Once);
             Assert.IsNotNull(result);
             Assert.AreEqual(_returningDiscounts1.Length + _returningDiscounts2.Length, result.Count());
             Assert.AreEqual(_returningDiscounts1[0].Savings, result[0].Savings);
